@@ -4,7 +4,6 @@ namespace lhs\craft\localeSelectorField\services;
 
 use Craft;
 use craft\base\Component;
-use craft\i18n\PhpMessageSource;
 use lhs\craft\localeSelectorField\models\CountryModel;
 use Locale;
 use Rinvex\Country\Country;
@@ -13,26 +12,6 @@ use Rinvex\Country\CountryLoaderException;
 
 class CountriesService extends Component
 {
-    /**
-     * @param array $config
-     */
-    public function __construct($config = [])
-    {
-        /**
-         * Define translations source for the Countries
-         * Using PHP bundle "umpirsky/country-list" (https://github.com/umpirsky/country-list)
-         */
-        Craft::$app->i18n->translations['country'] = [
-            'class' => PhpMessageSource::class,
-            'sourceLanguage' => 'fr-FR',
-            'basePath' => Craft::getAlias("@vendor/umpirsky/country-list/data"),
-            'forceTranslation' => true,
-            'allowOverrides' => true,
-        ];
-
-        parent::__construct($config);
-    }
-
     /**
      * Retrieves all countries as an array of key/val arrays, or as an array of NormalizedCountry objects
      * with countries name localized according to the language provided
@@ -55,7 +34,7 @@ class CountriesService extends Component
          */
         $countriesLocalized = [];
         foreach ($dataCountries as $dataCountry) {
-            $localizedName = Locale::getDisplayRegion('-' . $dataCountry->getIsoAlpha2(), $language);
+            $localizedName = $this->getLocalizedName($dataCountry->getIsoAlpha2(), $language);
             if ($asKeyValArray) {
                 $countriesLocalized[$dataCountry->getIsoAlpha2()] = $localizedName;
                 asort($countriesLocalized);
@@ -78,21 +57,25 @@ class CountriesService extends Component
     /**
      * Fetch a country by its ISO code
      *
-     * @param string $iso
+     * @param string $iso2
      * @param string|null $language
      * @return null|CountryModel
      * @throws CountryLoaderException
      */
-    public function getCountryByISO(string $iso, string $language = null): ?CountryModel
+    public function getCountryByISO(string $iso2, string $language = null): ?CountryModel
     {
+        if ($language === null) {
+            $language = Craft::$app->getLocale()->getLanguageID();
+        }
+
         //Fetch the country by its ISO code
-        $dataCountry = CountryLoader::country($iso);
+        $dataCountry = CountryLoader::country($iso2);
 
         //If country was found, we create an object to return
         if (!empty($dataCountry)) {
             $country = new CountryModel();
             $country
-                ->setName(Craft::t('country', $dataCountry->getIsoAlpha2(), [], $language))
+                ->setName($this->getLocalizedName($iso2, $language))
                 ->setNativeName($dataCountry->getNativeName())
                 ->setIso2($dataCountry->getIsoAlpha2())
                 ->setIso3($dataCountry->getIsoAlpha3());
@@ -101,5 +84,14 @@ class CountriesService extends Component
         }
 
         return null;
+    }
+
+    public function getLocalizedName(string $iso2, ?string $language = null): string
+    {
+        if ($language === null) {
+            $language = Craft::$app->getLocale()->getLanguageID();
+        }
+
+        return Locale::getDisplayRegion("-$iso2", $language);
     }
 }
