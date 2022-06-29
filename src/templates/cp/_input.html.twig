@@ -1,0 +1,9 @@
+{% import '_includes/forms' as forms %}
+
+{{ forms.select({
+    id : field.handle,
+    name : field.handle,
+    value: value,
+    placeholder: 'input.pick-site-cta'|t('locale-selector'),
+    options: data|sort
+}) }}

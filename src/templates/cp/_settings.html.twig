@@ -1,0 +1,57 @@
+{% import '_includes/forms' as forms %}
+
+{{ forms.radioGroupField({
+    label : 'settings.datatype-label'|t('locale-selector'),
+    instructions : 'settings.datatype-instructions'|t('locale-selector'),
+    id : 'datatype',
+    name : 'datatype',
+    value: currentDatatype,
+    options : availableDatatypes
+}) }}
+
+{{ forms.checkboxGroupField({
+    label : 'settings.allowed-sites-label'|t('locale-selector'),
+    instructions : 'settings.allowed-sites-instructions'|t('locale-selector'),
+    id : 'data-list-1',
+    name : 'whitelistedSites',
+    values: whitelistedSites,
+    options : availableSites
+}) }}
+
+{{ forms.checkboxGroupField({
+    label : 'settings.allowed-countries-label'|t('locale-selector'),
+    instructions : 'settings.allowed-countries-instructions'|t('locale-selector'),
+    id : 'data-list-2',
+    name : 'whitelistedCountries',
+    values: whitelistedCountries,
+    options : availableCountries
+}) }}
+
+<script>
+    //Fetch the radiobox for choosing the datatype
+    const datatypeRadios = document.querySelectorAll('input[type="radio"][name$="[datatype]"]');
+
+    //Add a listener for each radiobox to handle their change
+    Array.from(datatypeRadios).forEach(datatypeRadio => {
+        datatypeRadio.addEventListener('change', function(event) {
+            changeListDisplayed(this.value);
+        });
+    });
+
+    /**
+     * Change the data list displayed
+     * @param numList
+     */
+    function changeListDisplayed(numList = 1) {
+        //Hide all lists
+        Array.from(document.querySelectorAll('fieldset[id^="types-modules-localesselector-fields-LocalesSelectorFields-data-list-"]')).forEach(listField => {
+            listField.style.display = 'none';
+        });
+
+        //Show only the choosen list
+        document.getElementById(`types-modules-localesselector-fields-LocalesSelectorFields-data-list-${numList}-field`).style.display = 'block';
+    }
+
+    //Change the display of lists according to the current datatype
+    changeListDisplayed({{ currentDatatype }});
+</script>

@@ -1,0 +1,43 @@
+{
+    "name": "la-haute-societe/craft-locale-selector",
+    "description": "A custom field type that lets you select either a site or a country",
+    "type": "craft-plugin",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "country",
+        "site",
+        "field",
+        "field-type"
+    ],
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "La Haute Société",
+            "homepage": "https://www.lahautesociete.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^4.0.0",
+        "rinvex/countries": "^7.3",
+        "ext-intl": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "lhs\\craft\\localeSelectorField\\": "src/"
+        }
+    },
+    "support": {
+        "email": "dev@lahautesociete.com",
+        "issues": "https://github.com/la-haute-societe/craft-locale-selector-field/issues"
+    },
+    "extra": {
+        "name": "Locale selector field",
+        "handle": "locale-selector",
+        "developer": "La Haute Société",
+        "developerUrl": "https://www.lahautesociete.com/",
+        "class": "lhs\\craft\\localeSelectorField\\Plugin",
+    }
+}

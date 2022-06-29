@@ -1,0 +1,7 @@
+# Common
+/.idea
+
+# Dependencies
+/node_modules
+/vendor
+/composer.lock
