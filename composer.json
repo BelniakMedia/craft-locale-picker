@@ -38,6 +38,6 @@
         "handle": "locale-selector",
         "developer": "La Haute Société",
         "developerUrl": "https://www.lahautesociete.com/",
-        "class": "lhs\\craft\\localeSelectorField\\Plugin",
+        "class": "lhs\\craft\\localeSelectorField\\Plugin"
     }
 }
