@@ -1,33 +1,33 @@
 {% import '_includes/forms' as forms %}
 
 {{ forms.radioGroupField({
-    label : 'settings.datatype-label'|t('locale-selector'),
-    instructions : 'settings.datatype-instructions'|t('locale-selector'),
-    id : 'datatype',
-    name : 'datatype',
+    label: 'settings.datatype-label'|t('locale-selector'),
+    instructions: 'settings.datatype-instructions'|t('locale-selector'),
+    id: 'datatype',
+    name: 'datatype',
     value: currentDatatype,
-    options : availableDatatypes
+    options: availableDatatypes
 }) }}
 
 {{ forms.checkboxGroupField({
-    label : 'settings.allowed-sites-label'|t('locale-selector'),
-    instructions : 'settings.allowed-sites-instructions'|t('locale-selector'),
-    id : 'data-list-1',
-    name : 'whitelistedSites',
+    label: 'settings.allowed-sites-label'|t('locale-selector'),
+    instructions: 'settings.allowed-sites-instructions'|t('locale-selector'),
+    id: 'data-list-1',
+    name: 'whitelistedSites',
     values: whitelistedSites,
-    options : availableSites
+    options: availableSites
 }) }}
 
 {{ forms.checkboxGroupField({
-    label : 'settings.allowed-countries-label'|t('locale-selector'),
-    instructions : 'settings.allowed-countries-instructions'|t('locale-selector'),
-    id : 'data-list-2',
-    name : 'whitelistedCountries',
+    label: 'settings.allowed-countries-label'|t('locale-selector'),
+    instructions: 'settings.allowed-countries-instructions'|t('locale-selector'),
+    id: 'data-list-2',
+    name: 'whitelistedCountries',
     values: whitelistedCountries,
-    options : availableCountries
+    options: availableCountries
 }) }}
 
-<script>
+{% js %}
     //Fetch the radiobox for choosing the datatype
     const datatypeRadios = document.querySelectorAll('input[type="radio"][name$="[datatype]"]');
 
@@ -43,15 +43,15 @@
      * @param numList
      */
     function changeListDisplayed(numList = 1) {
-        //Hide all lists
-        Array.from(document.querySelectorAll('fieldset[id^="types-modules-localesselector-fields-LocalesSelectorFields-data-list-"]')).forEach(listField => {
+        // Hide all lists
+        Array.from(document.querySelectorAll('fieldset[id^="{{ 'data-list'|namespaceInputId }}"]')).forEach(listField => {
             listField.style.display = 'none';
         });
 
-        //Show only the choosen list
-        document.getElementById(`types-modules-localesselector-fields-LocalesSelectorFields-data-list-${numList}-field`).style.display = 'block';
+        // Show only the chosen list
+        document.getElementById(`{{ 'data-list'|namespaceInputId }}-${numList}-field`).style.display = 'block';
     }
 
     //Change the display of lists according to the current datatype
     changeListDisplayed({{ currentDatatype }});
-</script>
+{% endjs %}
