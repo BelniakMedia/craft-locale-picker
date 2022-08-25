@@ -9,13 +9,14 @@
     options: availableDatatypes
 }) }}
 
-{{ forms.checkboxGroupField({
+{{ forms.checkboxSelectField({
     label: 'settings.allowed-sites-label'|t('locale-selector'),
     instructions: 'settings.allowed-sites-instructions'|t('locale-selector'),
     id: 'data-list-1',
     name: 'whitelistedSites',
     values: whitelistedSites,
-    options: availableSites
+    options: availableSites,
+    showAllOption: true,
 }) }}
 
 {{ forms.checkboxGroupField({

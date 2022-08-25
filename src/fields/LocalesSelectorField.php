@@ -7,6 +7,7 @@ use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\base\PreviewableFieldInterface;
 use craft\errors\InvalidFieldException;
+use craft\helpers\ArrayHelper;
 use craft\models\Site;
 use Exception;
 use GraphQL\Type\Definition\Type;
@@ -16,6 +17,7 @@ use lhs\craft\localeSelectorField\models\CountryModel;
 use lhs\craft\localeSelectorField\Plugin;
 use Rinvex\Country\CountryLoaderException;
 use yii\db\Schema;
+use function Arrayy\array_first;
 
 /**
  * This field allows a selection from a configured set of sites.
@@ -28,9 +30,9 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
     public int $datatype = Plugin::DATATYPE_SITES;
 
     /**
-     * @var array What sites have been whitelisted as selectable for this field.
+     * @var string[]|string What sites have been whitelisted as selectable for this field.
      */
-    public array $whitelistedSites = [];
+    public array|string $whitelistedSites = '*';
 
     /**
      * @var array What countries have been whitelisted as selectable for this field.
@@ -111,7 +113,9 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
                 $data = $this->getAvailableSites();
 
                 // Get all whitelisted sites.
-                $whitelist = array_flip($this->whitelistedSites);
+                $whitelist = $this->whitelistedSites === '*'
+                    ? ArrayHelper::getColumn($data, 'handle')
+                    : array_flip($this->whitelistedSites);
 
                 //Transform the value (related to the data given by "normalizeValue()")
                 $value = is_null($value) ? null : $value->handle;
@@ -138,6 +142,7 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
         // Add a blank entry in, in case the field's options allow a 'None' selection.
         $whitelist[''] = true;
 
+        // TODO: Ensure none is the first element of the dropdown
         if (!$this->required) {
             // Add a 'None' option specifically for optional, single value fields.
             $data = ['' => Craft::t('app', 'None')] + $data;
@@ -228,14 +233,26 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
      */
     public function validateSitesWhitelist(string $attribute): void
     {
-        $sites = $this->getAvailableSites();
+        if (!is_array($this->whitelistedSites)) {
+            if ($this->whitelistedSites !== '*') {
+                $this->addError($attribute, Craft::t('locale-selector', 'input.errors.invalid-site'));
+            }
+            return;
+        }
 
+        if (count($this->whitelistedSites) && array_first($this->whitelistedSites) === '*') {
+            return;
+        }
+
+        $sites = $this->getAvailableSites();
         foreach ($this->whitelistedSites as $site) {
             if (!isset($sites[$site])) {
                 $this->addError($attribute, Craft::t('locale-selector', 'input.errors.invalid-site'));
             }
         }
     }
+
+
 
     /**
      * Ensures the site IDs selected are available to the current user.
@@ -307,5 +324,14 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
         }
 
         return parent::searchKeywords($value, $element);
+    }
+
+    public function beforeSave(bool $isNew): bool
+    {
+        if (is_array($this->whitelistedSites) && count($this->whitelistedSites) === 1 && array_first($this->whitelistedSites) === '*') {
+            $this->whitelistedSites = '*';
+        }
+
+        return parent::beforeSave($isNew);
     }
 }
