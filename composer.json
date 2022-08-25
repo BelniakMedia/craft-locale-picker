@@ -1,6 +1,6 @@
 {
     "name": "la-haute-societe/craft-locale-selector",
-    "description": "A custom field type that lets you select either a site or a country",
+    "description": "A Craft field type for selecting a site or a country",
     "type": "craft-plugin",
     "keywords": [
         "craft",
