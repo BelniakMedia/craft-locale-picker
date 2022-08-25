@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - add an "All" option to allow selecting all sites in the field settings
+- add the ability to select / deselect all countries in the field settings
 ### Fixed
 - settings now only show the country or site whitelist according to the selected
   datatype

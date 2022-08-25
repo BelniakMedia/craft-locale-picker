@@ -53,6 +53,47 @@
         document.getElementById(`{{ 'data-list'|namespaceInputId }}-${numList}-field`).style.display = 'block';
     }
 
+
     //Change the display of lists according to the current datatype
     changeListDisplayed({{ currentDatatype }});
+
+    // Add Select all / Unselect all buttons for countries
+    const countryFieldInstructions = document.getElementById('{{ 'data-list-2-instructions'|namespaceInputId }}');
+    const checkboxesContainer = countryFieldInstructions.parentElement.querySelector('.input');
+
+    const selectAllButton = document.createElement('button');
+    selectAllButton.type = 'button';
+    selectAllButton.className = 'link';
+    selectAllButton.appendChild(document.createTextNode('Select all'));
+    selectAllButton.addEventListener('click', function() {
+        checkboxesContainer.querySelectorAll('input[type=checkbox]').forEach(node => {
+          node.checked = true;
+        });
+    });
+
+    const deselectAllButton = document.createElement('button');
+    deselectAllButton.type = 'button';
+    deselectAllButton.className = 'link';
+    deselectAllButton.appendChild(document.createTextNode('Deselect all'));
+    deselectAllButton.addEventListener('click', function() {
+        checkboxesContainer.querySelectorAll('input[type=checkbox]').forEach(node => {
+          node.checked = false;
+        });
+    });
+
+    checkboxesContainer.parentElement.insertBefore(selectAllButton, checkboxesContainer);
+    checkboxesContainer.parentElement.insertBefore(document.createTextNode(' / '), checkboxesContainer);
+    checkboxesContainer.
+    parentElement.insertBefore(deselectAllButton, checkboxesContainer);
 {% endjs %}
+
+{% css %}
+    .link {
+    color: var(--notice-color);
+    margin: 5px 0;
+    }
+
+    .link:hover {
+    text-decoration: underline
+    }
+{% endcss %}
