@@ -102,7 +102,7 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
      * @throws Exception
      * @see craft\base\Field
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
         /**
          * Retrieve useful data according to the type
@@ -169,7 +169,7 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
      * @return array|mixed|CountryModel|void|null
      * @throws Exception
      */
-    public function normalizeValue(mixed $value, ElementInterface $element = null): mixed
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
         if (is_null($value)) {
             return null;
@@ -200,7 +200,7 @@ class LocalesSelectorField extends Field implements PreviewableFieldInterface
      * @return string|null
      * @throws Exception
      */
-    public function serializeValue(mixed $value, ElementInterface $element = null): ?string
+    public function serializeValue(mixed $value, ?ElementInterface $element = null): ?string
     {
         return match ($this->datatype) {
             Plugin::DATATYPE_SITES => ($value instanceof Site) ? $value->handle : null,

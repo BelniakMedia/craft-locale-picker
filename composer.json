@@ -2,6 +2,7 @@
     "name": "la-haute-societe/craft-locale-selector",
     "description": "A Craft field type for selecting a site or a country",
     "type": "craft-plugin",
+    "version": "2.0.0",
     "keywords": [
         "craft",
         "cms",
@@ -20,7 +21,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^4.0.0",
+        "craftcms/cms": "^5.0.0",
         "rinvex/countries": "^7.3",
         "ext-intl": ">=1.0.0"
     },
@@ -39,5 +40,16 @@
         "developer": "La Haute Société",
         "developerUrl": "https://www.lahautesociete.com/",
         "class": "lhs\\craft\\localeSelectorField\\Plugin"
+    },
+    "config": {
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true,
+            "craftcms/plugin-installer": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "craftcms/rector": "dev-main"
     }
 }
